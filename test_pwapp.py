@@ -17,4 +17,3 @@ def test_generate_probability_distribution_graph():
 def test_generate_distraction_graph():
     # Test that the function runs without errors
     assert generate_distraction_graph() is None
-
