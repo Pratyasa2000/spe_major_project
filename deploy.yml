@@ -1,0 +1,30 @@
+---
+- name: Deploy Flask Application to Kubernetes
+  hosts: localhost
+  tasks:
+    - name: Check if the pod exists
+      shell: kubectl get pod pwpod --ignore-not-found
+      register: pod_exists
+
+    - name: Delete existing pod if it exists
+      shell: kubectl delete pod pwpod
+      when: pod_exists.stdout != ''
+
+    - name: Run the new pod
+      shell: kubectl run pwpod --image=aditigoel12/spe:latest --port=8082
+
+    - name: Check if the service exists
+      shell: kubectl get svc pwodsvc --ignore-not-found
+      register: svc_exists
+
+    - name: Expose the new pod if the service does not exist
+      shell: kubectl expose pod pwpod --name=pwodsvc --port=8082
+      when: svc_exists.stdout == ''
+
+    - name: Wait for the pod to be ready
+      shell: kubectl wait --for=condition=ready pod/pwpod --timeout=120s
+
+    - name: Forward the port
+      shell: |
+        pkill -f "kubectl port-forward service/pwodsvc 7080:8082" || true
+        nohup kubectl port-forward service/pwodsvc 7080:8082 &
