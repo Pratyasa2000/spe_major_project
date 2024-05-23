@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pwapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pwapp
+  template:
+    metadata:
+      labels:
+        app: pwapp
+    spec:
+      containers:
+      - name: pwapp
+        image: aditigoel12/spe:latest
+        ports:
+        - containerPort: 8082
