@@ -16,17 +16,17 @@
     - name: Apply deployment manifest
       command: kubectl apply -f deployment.yaml
       args:
-        chdir: /home/aditi/spe
+        chdir: /var/lib/jenkins/spe
 
     - name: Apply service manifest
       command: kubectl apply -f service.yaml
       args:
-        chdir: /home/aditi/spe
+        chdir: /var/lib/jenkins/spe
 
     - name: Wait for deployment to be ready
       command: kubectl wait --for=condition=available deployment/pwapp-deployment --timeout=360s
       args:
-        chdir: /home/aditi/spe
+        chdir: /var/lib/jenkins/spe
 
     - name: Ensure service is running
       command: kubectl get service pwapp-service
